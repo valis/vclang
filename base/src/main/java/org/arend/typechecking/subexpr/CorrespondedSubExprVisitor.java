@@ -102,8 +102,15 @@ public class CorrespondedSubExprVisitor implements
   }
 
   @Override
-  public Pair<Expression, Concrete.Expression> visitGoal(Concrete.GoalExpression expr, Expression coreExpr) {
-    return atomicExpr(expr, coreExpr);
+  public Pair<Expression, Concrete.Expression> visitGoal(Concrete.GoalExpression goalExpr, Expression coreGoalExpr) {
+    if (coreGoalExpr instanceof GoalErrorExpression) {
+      var innerConcreteExpression = goalExpr.expression;
+      var innerCoreExpression = ((GoalErrorExpression) coreGoalExpr).getExpression();
+      if (innerConcreteExpression != null && innerCoreExpression != null) {
+        return innerConcreteExpression.accept(this, innerCoreExpression);
+      }
+    }
+    return atomicExpr(goalExpr, coreGoalExpr);
   }
 
   @Override

@@ -100,7 +100,7 @@ public class TypeCheckingTestCase extends NameResolverTestCase {
     return typeCheckDef(reference, 0);
   }
 
-  private Definition typeCheckDef(ConcreteLocatedReferable reference, int errors) {
+  protected Definition typeCheckDef(ConcreteLocatedReferable reference, int errors) {
     new TypecheckingOrderingListener(libraryManager.getInstanceProviderSet(), ConcreteReferableProvider.INSTANCE, IdReferableConverter.INSTANCE, errorReporter, PositionComparator.INSTANCE, ref -> null).typecheckDefinitions(Collections.singletonList((Concrete.Definition) reference.getDefinition()), null);
     Definition definition = reference.getTypechecked();
     boolean ok = errors != 0 || new CoreDefinitionChecker(errorReporter).check(definition);

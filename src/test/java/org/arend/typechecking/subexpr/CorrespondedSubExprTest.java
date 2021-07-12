@@ -398,4 +398,20 @@ public class CorrespondedSubExprTest extends TypeCheckingTestCase {
     assertEquals(c.toString(), accept.proj1.toString());
     assertEquals(c.toString(), accept.proj2.toString());
   }
+
+  @Test
+  public void exprInGoal() {
+    var resolved = resolveNamesDef(
+            "\\func test : Nat => {?(10)}");
+    var concreteDef = (Concrete.FunctionDefinition) resolved.getDefinition();
+    var concrete = (Concrete.GoalExpression) concreteDef.getBody().getTerm();
+    assertNotNull(concrete);
+    assertNotNull(concrete.getExpression());
+    var accept = concreteDef.accept(new CorrespondedSubDefVisitor(
+            concrete.getExpression()
+    ), typeCheckDef(resolved, 1));
+    assertNotNull(accept);
+    assertEquals("10", accept.proj1.toString());
+    assertEquals("10", accept.proj2.toString());
+  }
 }
